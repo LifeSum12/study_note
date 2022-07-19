@@ -503,9 +503,9 @@ required：设置是否必须传输此请求参数，默认值为true
 
 若设置为true时，则当前请求必须传输value所指定的请求参数，若没有传输该请求参数，且没有设置defaultValue属性，则页面报错400：Required String parameter 'xxx' is not present；若设置为false，则当前请求不是必须传输value所指定的请求参数，若没有传输，则注解所标识的形参的值为null
 
-defaultValue：不管required属性值为true或false，当value所指定的请求参数没有传输或传输的值为""时，则使用默认值为形参赋值
+**defaultValue：**不管required属性值为true或false，当value所指定的请求参数没有传输或传输的值为空""时，则使用默认值为形参赋值
 
-### 4、@RequestHeader
+### 4、@RequestHeader  
 
 @RequestHeader是将请求头信息和控制器方法的形参创建映射关系
 
@@ -632,7 +632,7 @@ public String testModelMap(ModelMap modelMap){
 
 ### 6、Model、ModelMap、Map的关系
 
-Model、ModelMap、Map类型的参数其实本质上都是 BindingAwareModelMap 类型的
+Model、ModelMap、Map类型的参数其实本质上都是 BindingAwareModelMap （实现类）类型的
 
 ```
 public interface Model{}
