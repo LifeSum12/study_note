@@ -1,6 +1,8 @@
-## 创建工程
 
-### 步骤
+
+### 创建MVC工程
+
+**步骤**
 
 1. 创建maven工程
 1. pom.xml加入相关spring依赖
@@ -17,14 +19,14 @@
 
 ​		@RequestMapping(value="/") 来实例该类的方法。value表示处理哪个浏览器url的访问，若需要请求转发，直接return “页面名” 即可，Thymeleaf配置已经帮忙简化了 页面位置前缀和.hmtl/.js等后缀。
 
-### 差异
+**差异**
 
 - SpringMVC.xml包含：开启注解扫描、Thymeleaf视图解析器、bean标签（实例类）等
 - web.xml包含： 前端控制器配置（声明了SpringMVC.xml位置、load-on-startup标签）
 
 
 
-### 访问流程
+### SpringMVC访问流程
 
 浏览器发送请求，若请求地址符合web.xml文件中的前端控制器的url-pattern，该请求就会被前端控制器DispatcherServlet处理。
 
@@ -32,13 +34,27 @@
 
 处理请求的方法需要返回一个字符串类型的视图名称，该视图名称会被视图解析器解析，加上前缀和后缀组成视图的路径，通过Thymeleaf对视图进行渲染，最终转发到视图所对应页面
 
-### 包类图
+
+
+### Javaweb包类图
 
 ![image-20220712150234352](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207121502476.png)
 
+### SSM框架总览
+
+![image-20220721170719515](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207211707666.png)
+
+- Spring框架是优化**业务层Service**（使用ioc，aop）
+- SpringMVC是优化**控制器Contorller**，即得到浏览器请求、处理请求、响应请求 或 转发视图等。
+  - 传统技术：servlet程序
+  - 历史上技术有：Webwork、Struts
+- Mybatis是优化**持久层Dao**，即对数据库操作。
+  - 传统技术：Jdbc
+  - 历史上技术有：DbUtils、JdbcTemplate、Hiberante、JPA
 
 
-## 一、获取浏览器请求
+
+## 一、获取浏览器请求⭐
 
 ## @RequestMapping注解
 
@@ -80,7 +96,7 @@
 
 注意：在使用\**时，只能使用/**/xxx的方式
 
-#### **路径中的占位符 ***
+#### **路径中的占位符 **
 
 **在页面请求url中，可通过“斜杠”来传值，但接收时候控制器注解value要设置：**
 
@@ -131,7 +147,7 @@ xml文件中＜url-pattern＞标签值 “ /* ”与“ / ” 的区别：
 
 
 
-## 二、处理浏览器请求
+## 二、处理浏览器请求⭐
 
 ### 获取请求参数
 
@@ -238,7 +254,7 @@ InternalResourceView
 
 ### 重定向视图
 
-RedirectView
+RedirectView	当功能已经完成，可以使用重定向。如删除后，重定向显示页面。
 
 ### 视图控制器
 
@@ -246,7 +262,7 @@ RedirectView
 
 
 
-## 四、RESTful
+## 四、RESTful⭐
 
 一种风格。
 
@@ -259,3 +275,207 @@ restful可以通过一个url，对同一个资源可以不同的操作，采取�
 SpringMVC 提供了 **HiddenHttpMethodFilter** 帮助我们**将 POST 请求转换为 DELETE 或 PUT 请求**。
 
 在web.xml组测一个过滤器即可。
+
+
+
+## 五、请求与响应之HttpMessageConverter
+
+信息转换器。
+
+把获取页面请求参数 转换为 后端java对象。**或者把后端java对象 转换为 页面的响应参数（常用）**
+
+### 获取请求参数（少用）
+
+一般使用第二章的方法获取请求参数。
+
+#### 1.注解 @RequestBody
+
+标识控制器的形参。获取请求体。
+
+#### 2.RequestEntity类型
+
+设置控制器的形参类型。RequestEntity表示整个请求的信息。可获取请求头，请求体。
+
+getHeaders()
+
+getBody()
+
+
+
+### 发回响应参数
+
+#### 1.HttpServletResponse
+
+**传统方法：通过HttpServletResponse对象响应**
+
+​	respone.getWriter().print("页面显示内容"); 该语句作用直接把响应体给浏览器。
+
+响应体：浏览器页面看到的内容。
+
+
+
+#### 2.@ResponseBody注解
+
+**SpringMVC提供方法：@ResponseBody注解（常用）**	
+
+标识控制器方法，将该方法的返回值直接作为响应报文的响应体响应到浏览器。
+
+```java
+@RequestMapping("/testResponseBody")
+@ResponseBody
+public String testResponseBody(){
+    return "页面显示内容！";
+}
+```
+
+> Ajax的诞生：
+>
+> ​	浏览器发起请求时候，目的是为了得到来自服务器的响应，从而刷新(更新)当前浏览器页面。那么，服务器为了解决，可以使用请求转发/重定向 来让浏览器跳转到新的页面。
+>
+> ​	但有时候请求仅仅只是为了对当前页面进行局部更新，Ajax就诞生了，它不会产生新页面，只会返回数据对当前页面进行更新。
+>
+> ​	所有，在用@ResponseBody注解标识的方法，返回的String字符串不再是 页面资源 or servlet程序，而是变成了响应体。因为此时不再需要返回新页面了，需要的是对当前页面更新的数据。
+
+
+
+#### 扩展知识
+
+##### SpringMVC处理json
+
+​	1.导入json依赖。2.开启注解<mvc:annotation-driven />
+
+​	完成后，服务器即可向浏览器传输bean等数据信息，内部由json实现类完成。
+
+##### SpringMVC处理Ajax
+
+​	通过采用@ResponseBody注解。
+
+
+
+#### 3.ResponseEntity类型
+
+控制器方法的返回值类型，该控制器方法的返回值就是响应到浏览器的响应报文。
+
+
+
+## 六、文件操作
+
+**实现文件下载：**
+
+​	 ResponseEntity<byte[]> 返回类型，通过对responseEntity对象设置：响应体(下载内容)，响应头，状态码
+
+​	其中响应体读取通过流来实现。
+
+**实现文件上传：**
+
+需要导入依赖。SpringMVC.xml添加配置。控制器再实现上传到的路径。
+
+解决文件上传服务器的重名问题，使用的是UUID，即36位随机数（重复的概率几乎为0）。
+
+
+
+## 七、拦截器⭐
+
+拦截器是 拦截/处理一些url请求，与过滤器类似功能。
+
+顺序：页面请求 --> 过滤器 -> DispatcherServlet -> [pre拦截器] --> controller控制器 --> [post拦截器]--> 返回页面 --> [after拦截器]
+
+### 使用
+
+拦截器是一个类，该类要自行创建并实现抽象类HandlerInterceptor。该类实现pre post after三个方法。
+
+还需要在SpringMVC的配置文件中进行配置。即，哪个拦截器需要拦截哪些路径。
+
+### 多个拦截器
+
+执行顺序不同于过滤器。
+
+
+
+## 八、异常处理器
+
+### 介绍
+
+SpringMVC提供了一个处理控制器方法执行过程中所出现的异常的接口：HandlerExceptionResolver
+
+该接口有两个实现类：DefaultHandlerExceptionResolver和SimpleMappingExceptionResolver
+
+- DefaultHandlerExceptionResolver是默认异常处理，当出现异常时候，SpringMVC自动帮我们处理，如返回404页面
+- SimpleMappingExceptionResolver是自定义异常处理类。如：出现错误时，想返回一个自定义的错误页面告诉用户，可以在该类实现。
+
+### 处理方式
+
+1. 基于配置SpringMVC.xml方式创建自定义异常处理器
+
+2. 基于注解方式创建自定义异常处理器
+
+​	两种方式其具体实现，都是创建一个类，让实现接口它成为异常处理器。
+
+​	再告诉这个类，出现什么异常，如何处理（只能选择返回哪个页面，不能其他操作）。
+
+
+
+## 九、完全注解⭐
+
+使用注解代替web.xml和SpringMVC配置文件的功能。
+
+### 步骤
+
+1.创建一个类(WebInit) 来替代web.xml配置文件。该类需要实现AbstractAnnotationConfigDispatcherServletInitializer接口，然后系统会自动找到该类来替代web.xml。
+
+WebInit类要实现的三个方法：
+
+- getRootConfigClasses()	需要返回一个或多个 spring的配置类
+- getServletConfigClasses() 需要返回一个或多个 SpringMVC的配置类
+- getServletMappings() 需要返回DispatcherServlet的映射规则，即url-pattern
+- （可选重写方法）添加过滤器类
+
+
+
+2.创建SpringConfig配置类，代替spring的配置文件。类上方添加注解@Configuration。
+
+3.创建WebConfig配置类，代替SpringMVC的配置文件。类上方添加注解@Configuration。
+
+​	注解类方式实现WebConfig需要的内容：
+
+- 扫描组件 ：添加类注解@ComponetScan
+- 开启mvc注解驱动 ：添加类注解@EnableWebMvc
+- thymeleaf 视图解析器 ：创建方法并添加注解@Bean
+- 文件上传解析器 ：创建方法并添加注解@Bean
+- view-controller ： 实现WebMvcConfigurer接口的方法
+- default-servley-handler(处理静态资源) ： 实现WebMvcConfigurer接口的方法
+- 拦截器 ：实现WebMvcConfigurer接口的方法
+- 异常处理器 ：实现WebMvcConfigurer接口的方法
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+十、执行过程⭐
+

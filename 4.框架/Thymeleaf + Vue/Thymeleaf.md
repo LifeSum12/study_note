@@ -67,3 +67,20 @@ jsp获取方式：通过在标签中，添加表达式获取。
 	<p th:text="${applicaton.变量名}"></p>
 ```
 
+
+
+### 遍历获取信息
+
+th:each属性。
+
+如下：employeeList是request域中的一个集合（集合每个元素是一个对象），每次通过自定义变量employee获取。
+
+```html
+<tr th:each="employee : ${employeeList}">
+    <td th:text="${employee.id}"></td>
+    <td th:text="${employee.lastName}"></td>
+    <td th:text="${employee.email}"></td>
+    <td th:text="${employee.gender}"></td>
+</tr>
+```
+

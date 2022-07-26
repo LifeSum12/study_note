@@ -823,6 +823,18 @@ b>当前请求必须传输请求参数_method
 
 
 
+具体实现：
+
+​	在form表单中，设置method=“post”。
+
+​	加入一个input标签，type=“hidden”隐藏起来, 对_method属性赋值。内部会把_method值替代post。
+
+```html
+<input type="hidden" name="_method" value="delete"/>
+```
+
+
+
 # 八、RESTful案例
 
 ### 1、准备工作
@@ -1066,7 +1078,7 @@ public String getEmployeeList(Model model){
                 //通过id获取表单标签
                 var delete_form = document.getElementById("delete_form");
                 //将触发事件的超链接的href属性为表单的action属性赋值
-                delete_form.action = event.target.href;
+                delete_form.action =  .target.href;
                 //提交表单
                 delete_form.submit();
                 //阻止超链接的默认跳转行为
@@ -1224,7 +1236,7 @@ requestBody:username=admin&password=123456
 
 ### 2、RequestEntity
 
-RequestEntity封装请求报文的一种类型，需要在控制器方法的形参中设置该类型的形参，当前请求的请求报文就会赋值给该形参，可以通过getHeaders()获取请求头信息，通过getBody()获取请求体信息
+RequestEntity封装请求报文的一种类型，需要在控制器方法的形参中设置该类型的形参，当前请求的请求报文就会赋值给该形参，可以通过getHeaders()获取请求头信息，通过getBody()获取请求体信息。泛型String表示使用字符串形式来获取。
 
 ```java
 @RequestMapping("/testRequestEntity")
@@ -1267,7 +1279,7 @@ a>导入jackson的依赖
 </dependency>
 ```
 
-b>在SpringMVC的核心配置文件中开启mvc的注解驱动，此时在HandlerAdaptor中会自动装配一个消息转换器：MappingJackson2HttpMessageConverter，可以将响应到浏览器的Java对象转换为Json格式的字符串
+b>在SpringMVC的核心配置文件中开启mvc的注解驱动，此时在HandlerAdaptor中会自动装配一个消息转换器：MappingJackson2HttpMessageConverter，可以将响应到浏览器的Java对象转换为Json格式的 字符串
 
 ```
 <mvc:annotation-driven />
@@ -1288,6 +1300,14 @@ public User testResponseUser(){
 浏览器的页面中展示的结果：
 
 {"id":1001,"username":"admin","password":"123456","age":23,"sex":"男"}
+
+
+
+**Json回顾：Json有两个类型，json数组和json对象。**
+
+​	如，Map数据转换为json对象，bean实体类转换为json对象对象。List集合转换为json数组。
+
+
 
 ### 5、SpringMVC处理ajax
 
@@ -1430,6 +1450,23 @@ public String testUp(MultipartFile photo, HttpSession session) throws IOExceptio
 
 # 十、拦截器
 
+### 前言补充
+
+执行流程：
+
+1. 浏览器发送请求
+2. **过滤器**
+3. DispatcherServlet
+4. **preHandle 拦截器**
+5. Controller （又名Handele）
+6. **postHandle 拦截器**
+7. 返回ModelAndView给页面渲染后
+8. **afterComplation 拦截器**
+
+可查看DispatcherServlet处理过程代码。
+
+
+
 ### 1、拦截器的配置
 
 SpringMVC中的拦截器用于拦截控制器方法的执行
@@ -1438,16 +1475,19 @@ SpringMVC中的拦截器需要实现HandlerInterceptor
 
 SpringMVC的拦截器必须在SpringMVC的配置文件中进行配置：
 
+​	（用下面那种，先要在拦截器类上加入@component注解创建拦截器对象，再使用ref获取到该对象）
+
 ```xml
 <bean class="com.atguigu.interceptor.FirstInterceptor"></bean>
 <ref bean="firstInterceptor"></ref>
 <!-- 以上两种配置方式都是对DispatcherServlet所处理的所有的请求进行拦截 -->
+
 <mvc:interceptor>
     <mvc:mapping path="/**"/>
     <mvc:exclude-mapping path="/testRequestEntity"/>
     <ref bean="firstInterceptor"></ref>
 </mvc:interceptor>
-<!-- 
+<!--  
 	以上配置方式可以通过ref或bean标签设置拦截器，通过mvc:mapping设置需要拦截的请求，通过mvc:exclude-mapping设置需要排除的请求，即不需要拦截的请求
 -->
 ```
@@ -1476,6 +1516,8 @@ preHandle()返回false和它之前的拦截器的preHandle()都会执行，postH
 
 # 十一、异常处理器
 
+在控制器方法中出现异常时候，需要用到的。
+
 ### 1、基于配置的异常处理
 
 SpringMVC提供了一个处理控制器方法执行过程中所出现的异常的接口：HandlerExceptionResolver
@@ -1502,6 +1544,30 @@ SpringMVC提供了自定义的异常处理器SimpleMappingExceptionResolver，�
 </bean>
 ```
 
+
+
+>Bean 中注入Properties介绍：
+>
+>​	property标签表示Properties中的一个键值对。如：	<property name="lastName" value="子龙"></property>
+>
+>​	若property中的一个键的值为对象，则采用 prop标签为对象每个属性赋值。如：键emails的值是一个对象，为该对象admin属性和support属性赋值。
+>
+>​		<property name="emails">
+>
+>​			<props>
+>
+>​				<prop key="admin">admin@leon.com</prop>
+>
+>​				<prop key="support">support@leon.com</prop>
+>
+>​			</props>
+>
+>​	</property>
+>
+>
+
+
+
 ### 2、基于注解的异常处理
 
 ```java
@@ -1526,7 +1592,7 @@ public class ExceptionController {
 
 ### 1、创建初始化类，代替web.xml
 
-在Servlet3.0环境中，容器会在类路径中查找实现javax.servlet.ServletContainerInitializer接口的类，如果找到的话就用它来配置Servlet容器。
+在Servlet3.0环境中，容器会在类路径中查找实现javax.servlet.ServletContainerInitializer接口的类，如果找到的话就用它来配置Servlet容器（就是tomcat服务器）。
 Spring提供了这个接口的实现，名为SpringServletContainerInitializer，这个类反过来又会查找实现WebApplicationInitializer的类并将配置的任务交给它们来完成。Spring3.2引入了一个便利的WebApplicationInitializer基础实现，名为AbstractAnnotationConfigDispatcherServletInitializer，当我们的类扩展了AbstractAnnotationConfigDispatcherServletInitializer并将其部署到Servlet3.0容器的时候，容器会自动发现它，并用它来配置Servlet上下文。
 
 ```java
@@ -1678,6 +1744,10 @@ public String index(){
 
 # 十三、SpringMVC执行流程
 
+> ModelAndView中：
+>
+> ​	View是返回视图名称，Model是存几个域对象信息
+
 ### 1、SpringMVC常用组件
 
 - DispatcherServlet：**前端控制器**，不需要工程师开发，由框架提供
@@ -1695,6 +1765,14 @@ public String index(){
 - HandlerAdapter：**处理器适配器**，不需要工程师开发，由框架提供
 
 作用：通过HandlerAdapter对处理器（控制器方法）进行执行
+
+
+
+> 解释HandlerMapping、Handler、HandlerAdapter联系：
+>
+> ​	由HandlerMapping通过url去找到相对于的Handler，然后传输request，response，Handler给HandlerAdapter，由适配器来执行方法。
+
+
 
 - ViewResolver：**视图解析器**，不需要工程师开发，由框架提供
 

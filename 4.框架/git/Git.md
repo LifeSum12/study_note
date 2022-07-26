@@ -140,4 +140,16 @@ Git 是一个免费的、开源的 **分布式版本控制系统 **，可以快�
 
 
 
-常用命令
+**常用命令：**
+
+git status																											状态查看，红色表示未加入缓冲区
+
+① git add *.md	
+
+② git commit -m "版本信息"
+
+git remote -v 																										查看版本信息
+
+git remote add study_note https://github.com/LifeSum12/study_note	添加GitHub路径
+
+③ git push study_note master																		master表示当前分支
