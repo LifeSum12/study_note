@@ -424,7 +424,12 @@ public void insertUser() {
 	mapper.insertUser(user);
 }
 ```
+> 注意：该方法直接使用属性名获取参数，仅限于 1.只有一个参数  2.并且该参数为java中实体类对象
+
+
+
 ## 5. 使用@Param标识参数 ✔
+
 - 可以通过@Param注解标识mapper接口中的方法参数，此时，会将这些参数放在map集合中 
 
 	1. 以@Param注解的value属性值为键，以参数为值；
@@ -761,7 +766,7 @@ public class Emp {
 	select * from t_emp left join t_dept on t_emp.eid = t_dept.did where t_emp.eid = #{eid}
 </select>
 ```
-### 分步查询
+### 分步查询 ✔
 #### 1. 查询员工信息
 - select：设置分布查询的sql的唯一标识（namespace.SQLId或mapper接口的全类名.方法名）
 - column：设置分步查询的条件
@@ -844,7 +849,7 @@ public class Dept {
 	select * from t_dept left join t_emp on t_dept.did = t_emp.did where t_dept.did = #{did}
 </select>
 ```
-### 分步查询
+### 分步查询 ✔
 ####  1. 查询部门信息
 ```java
 /**
@@ -886,7 +891,7 @@ List<Emp> getDeptAndEmpByStepTwo(@Param("did") Integer did);
 	select * from t_emp where did = #{did}
 </select>
 ```
-## 延迟加载
+## 延迟加载 ✔
 - 分步查询的优点：可以实现延迟加载，但是必须在核心配置文件中设置全局配置信息：
 	- lazyLoadingEnabled：延迟加载的全局开关。当开启时，所有关联对象都会延迟加载  
 	- aggressiveLazyLoading：当开启时，任何方法的调用都会加载该对象的所有属性。 否则，每个属性会按需加载  
@@ -939,7 +944,7 @@ public void getEmpAndDeptByStepOne() {
 	```
 # 九、动态SQL
 - Mybatis框架的动态SQL技术是一种根据特定条件动态拼装SQL语句的功能，它存在的意义是为了解决拼接SQL语句字符串时的痛点问题
-## if
+## if ✔
 - if标签可通过test属性（即传递过来的数据）的表达式进行判断，若表达式的结果为true，则标签中的内容会执行；反之标签中的内容不会执行
 - 在where后面添加一个恒成立条件`1=1`
 	- 这个恒成立条件并不会影响查询的结果
@@ -964,7 +969,12 @@ public void getEmpAndDeptByStepOne() {
 	</if>
 </select>
 ```
-## where
+if标签中test的值，为封装java中类的属性名。
+
+
+
+## where ✔
+
 - where和if一般结合使用：
 	- 若where标签中的if条件都不满足，则where标签没有任何功能，即不会添加where关键字  
 	- 若where标签中的if条件满足，则where标签会自动添加where关键字，并将条件最前方多余的and/or去掉  
@@ -1039,7 +1049,7 @@ public void getEmpByCondition() {
 ```
 ![](Resources/trim测试结果.png)
 ## choose、when、otherwise
-- `choose、when、otherwise`相当于`if...else if..else`
+- `choose、when、otherwise`相当于 switch case default
 - when至少要有一个，otherwise至多只有一个
 ```xml
 <select id="getEmpByChoose" resultType="Emp">
@@ -1076,7 +1086,7 @@ public void getEmpByChoose() {
 ```
 ![](Resources/choose测试结果.png)
 - 相当于`if a else if b else if c else d`，只会执行其中一个
-## foreach
+## foreach ✔
 - 属性：  
 	- collection：设置要循环的数组或集合  
 	- item：表示集合或数组中的每一个数据  
@@ -1085,51 +1095,55 @@ public void getEmpByChoose() {
 	- close：设置foreach标签中的内容的结束符
 - 批量删除
 
-	```xml
-	<!--int deleteMoreByArray(Integer[] eids);-->
-	<delete id="deleteMoreByArray">
-		delete from t_emp where eid in
-		<foreach collection="eids" item="eid" separator="," open="(" close=")">
-			#{eid}
-		</foreach>
-	</delete>
-	```
-	```java
-	@Test
-	public void deleteMoreByArray() {
-		SqlSession sqlSession = SqlSessionUtils.getSqlSession();
-		DynamicSQLMapper mapper = sqlSession.getMapper(DynamicSQLMapper.class);
-		int result = mapper.deleteMoreByArray(new Integer[]{6, 7, 8, 9});
-		System.out.println(result);
-	}
-	```
-	![](Resources/foreach测试结果1.png)
+```xml
+<!--int deleteMoreByArray(Integer[] eids);-->
+<delete id="deleteMoreByArray">
+	delete from t_emp where eid in
+	<foreach collection="eids" item="eid" separator="," open="(" close=")">
+		#{eid}
+	</foreach>
+</delete>
+```
+```java
+@Test
+public void deleteMoreByArray() {
+	SqlSession sqlSession = SqlSessionUtils.getSqlSession();
+	DynamicSQLMapper mapper = sqlSession.getMapper(DynamicSQLMapper.class);
+	int result = mapper.deleteMoreByArray(new Integer[]{6, 7, 8, 9});
+	System.out.println(result);
+}
+```
+
+![](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207271640634.png)
+
 - 批量添加
 
-	```xml
-	<!--int insertMoreByList(@Param("emps") List<Emp> emps);-->
-	<insert id="insertMoreByList">
-		insert into t_emp values
-		<foreach collection="emps" item="emp" separator=",">
-			(null,#{emp.empName},#{emp.age},#{emp.sex},#{emp.email},null)
-		</foreach>
-	</insert>
-	```
-	```java
-	@Test
-	public void insertMoreByList() {
-		SqlSession sqlSession = SqlSessionUtils.getSqlSession();
-		DynamicSQLMapper mapper = sqlSession.getMapper(DynamicSQLMapper.class);
-		Emp emp1 = new Emp(null,"a",1,"男","123@321.com",null);
-		Emp emp2 = new Emp(null,"b",1,"男","123@321.com",null);
-		Emp emp3 = new Emp(null,"c",1,"男","123@321.com",null);
-		List<Emp> emps = Arrays.asList(emp1, emp2, emp3);
-		int result = mapper.insertMoreByList(emps);
-		System.out.println(result);
-	}
-	```
-	![](Resources/foreach测试结果2.png)
-## SQL片段
+```xml
+<!--int insertMoreByList(@Param("emps") List<Emp> emps);-->
+<insert id="insertMoreByList">
+	insert into t_emp values
+	<foreach collection="emps" item="emp" separator=",">
+		(null,#{emp.empName},#{emp.age},#{emp.sex},#{emp.email},null)
+	</foreach>
+</insert>
+```
+```java
+@Test
+public void insertMoreByList() {
+	SqlSession sqlSession = SqlSessionUtils.getSqlSession();
+	DynamicSQLMapper mapper = sqlSession.getMapper(DynamicSQLMapper.class);
+	Emp emp1 = new Emp(null,"a",1,"男","123@321.com",null);
+	Emp emp2 = new Emp(null,"b",1,"男","123@321.com",null);
+	Emp emp3 = new Emp(null,"c",1,"男","123@321.com",null);
+	List<Emp> emps = Arrays.asList(emp1, emp2, emp3);
+	int result = mapper.insertMoreByList(emps);
+	System.out.println(result);
+}
+```
+![](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207271640069.png)
+
+## SQL
+
 - sql片段，可以记录一段公共sql片段，在使用的地方通过include标签进行引入
 - 声明sql片段：`<sql>`标签
 ```xml
@@ -1143,44 +1157,93 @@ public void getEmpByChoose() {
 </select>
 ```
 # 十、MyBatis的缓存
+
+**缓存：客户端查询到的数据，会存放到缓存里，如果有类似的查询直接到缓存里获取。节约时间和资源。**
+
+---
+
+**前言：**
+
+Test测试中调用方法流程：
+
+①获取输入流（通过mybatis-config.xml全局配置文件）
+
+②新建一个SqlSessionFactoryBuilder对象，称sqlSession工厂创建对象。
+
+**新建一个SqlSessionFactory对象**（通过sqlSessionFactoryBuilder对象① 和 输入流②）
+
+**新建一个SqlSession对象** （通过sqlSessionFactory对象的openSession方法，该方法参数可开启自动提交事务）
+
+- SqlSession是客户端和数据库服务端之间的会话信息
+
+**新建一个Mapper对象** （通过sqlSession对象的getMapper方法 和 **自己定义Mapper接口**）
+
+- 得到的Mapper对象，是自己定义Mapper接口的实现类
+
+**最终，通过Mapper对象来调用编写的方法。**
+
+---
+
+
+
 ## MyBatis的一级缓存
+
+- 一级缓存默认开启的
 - 一级缓存是SqlSession级别的，通过同一个SqlSession查询的数据会被缓存，下次查询相同的数据，就会从缓存中直接获取，不会从数据库重新访问  
 - 使一级缓存失效的四种情况：  
 
 	1. 不同的SqlSession对应不同的一级缓存  
 	2. 同一个SqlSession但是查询条件不同
 	3. 同一个SqlSession两次查询期间执行了任何一次增删改操作
-	4. 同一个SqlSession两次查询期间手动清空了缓存
+	4. 同一个SqlSession两次查询期间手动清空了缓存。语法:sqlSession.clearCache()
+> 一级缓存，即查询的sql语句 “一模一样” 情况下才从缓存中拿。
+>
+> ​	第一次查询全部数据，第二次查询它子集时，不会再缓存中拿，因为sql语句不一致。
+
 ## MyBatis的二级缓存
+
 - 二级缓存是SqlSessionFactory级别，通过同一个SqlSessionFactory创建的SqlSession查询的结果会被缓存；此后若再次执行相同的查询语句，结果就会从缓存中获取  
 - 二级缓存开启的条件
 
 	1. 在核心配置文件中，设置全局配置属性cacheEnabled="true"，默认为true，不需要设置
 	2. 在映射文件中设置标签<cache />
-	3. 二级缓存必须在SqlSession关闭或提交之后有效
+	3. 二级缓存必须在SqlSession关闭或提交之后有效 
 	4. 查询的数据所转换的实体类类型必须实现序列化的接口
 - 使二级缓存失效的情况：两次查询之间执行了任意的增删改，会使一级和二级缓存同时失效
 ## 二级缓存的相关配置
 - 在mapper配置文件中添加的cache标签可以设置一些属性
+
 - eviction属性：缓存回收策略  
+
 	- LRU（Least Recently Used） – 最近最少使用的：移除最长时间不被使用的对象。  
 	- FIFO（First in First out） – 先进先出：按对象进入缓存的顺序来移除它们。  
 	- SOFT – 软引用：移除基于垃圾回收器状态和软引用规则的对象。  
 	- WEAK – 弱引用：更积极地移除基于垃圾收集器状态和弱引用规则的对象。
 	- 默认的是 LRU
+	
 - flushInterval属性：刷新间隔，单位毫秒
-	- 默认情况是不设置，也就是没有刷新间隔，缓存仅仅调用语句（增删改）时刷新
+
+  默认情况是不设置，也就是没有刷新间隔，缓存仅仅调用语句（增删改）时刷新
+
 - size属性：引用数目，正整数
-	- 代表缓存最多可以存储多少个对象，太大容易导致内存溢出
+
+  代表缓存最多可以存储多少个对象，太大容易导致内存溢出
+
 - readOnly属性：只读，true/false
-	- true：只读缓存；会给所有调用者返回缓存对象的相同实例。因此这些对象不能被修改。这提供了很重要的性能优势。  
-	- false：读写缓存；会返回缓存对象的拷贝（通过序列化）。这会慢一些，但是安全，因此默认是false
+
+  true：只读缓存；会给所有调用者返回缓存对象的相同实例。因此这些对象不能被修改。这提供了很重要的性能优势。  
+
+  false：读写缓存；会返回缓存对象的拷贝（通过序列化）。这会慢一些，但是安全，因此默认是false
 ## MyBatis缓存查询的顺序
 - 先查询二级缓存，因为二级缓存中可能会有其他程序已经查出来的数据，可以拿来直接使用  
+  - 因为：一级需要关闭后才能提交到二级，所以二级没有的可能一级有
 - 如果二级缓存没有命中，再查询一级缓存  
 - 如果一级缓存也没有命中，则查询数据库  
 - SqlSession关闭之后，一级缓存中的数据会写入二级缓存
 ## 整合第三方缓存EHCache（了解）
+
+mybatis厂商自己做的缓存机制可能一般，所以它提供二级缓存接口，给第三方来实现。
+
 ### 添加依赖
 ```xml
 <!-- Mybatis EHCache整合包 -->
@@ -1269,9 +1332,9 @@ public void getEmpByChoose() {
 # 十一、MyBatis的逆向工程
 - 正向工程：先创建Java实体类，由框架负责根据实体类生成数据库表。Hibernate是支持正向工程的
 - 逆向工程：先创建数据库表，由框架负责根据数据库表，反向生成如下资源：  
-	- Java实体类  
-	- Mapper接口  
-	- Mapper映射文件
+  - Java实体类  
+  - Mapper接口  
+  - Mapper映射文件
 ## 创建逆向工程的步骤
 ### 添加依赖和插件
 ```xml
@@ -1414,6 +1477,9 @@ public void getEmpByChoose() {
 	- 两者的驱动版本应该相同
 - 执行结果![](Resources/逆向执行结果.png)
 ## QBC
+
+Query by Criterion
+
 ### 查询
 - `selectByExample`：按条件查询，需要传入一个example对象或者null；如果传入一个null，则表示没有条件，也就是查询所有数据
 - `example.createCriteria().xxx`：创建条件对象，通过andXXX方法为SQL添加查询添加，每个条件之间是and关系

@@ -25,3 +25,42 @@
 
 
 
+### Test
+
+①获取输入流（通过mybatis-config.xml全局配置文件）
+
+②新建一个sqlSessionFactoryBuilder对象，称sqlSession工厂创建对象。
+
+**新建一个sqlSessionFactory对象**（通过sqlSessionFactoryBuilder对象① 和 输入流②）
+
+**新建一个sqlSession对象** （通过sqlSessionFactory对象的openSession方法，该方法参数可开启自动提交事务）
+
+**新建一个Mapper对象** （通过sqlSession对象的getMapper方法 和 **自己定义Mapper接口**）
+
+- 得到的Mapper对象，是自己定义Mapper接口的实现类。
+
+**最终，通过Mapper对象来调用编写的方法。**
+
+
+
+### Mapper配置文件
+
+“增删改查” 语句编写。
+
+sql语句参数获取【实体类、@param】
+
+各种查询结果接收【List，Map】
+
+特殊sql实现。
+
+
+
+自定义映射（数据库字段与java实体类属性）
+
+动态sql
+
+缓存
+
+
+
+### 逆向工程配置

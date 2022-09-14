@@ -1234,6 +1234,13 @@ public String testRequestBody(@RequestBody String requestBody){
 
 requestBody:username=admin&password=123456
 
+**使用细节：**
+
+- @RequestBody一个方法内只能使用一次，修饰的形参会全部获取请求体的参数。一般是使用javaBean来封装前端传来的各个参数（并且@RequestBody可以把json数据转换为java的数据类型）
+- 若前端传输的是{x: xxx}数据，则后端@RequestBody修饰参数只能是类、map集合等，String无法接收。(不同于上面例子，不一定会按"x=xx&x=xx"格式传输)
+
+
+
 ### 2、RequestEntity
 
 RequestEntity封装请求报文的一种类型，需要在控制器方法的形参中设置该类型的形参，当前请求的请求报文就会赋值给该形参，可以通过getHeaders()获取请求头信息，通过getBody()获取请求体信息。泛型String表示使用字符串形式来获取。

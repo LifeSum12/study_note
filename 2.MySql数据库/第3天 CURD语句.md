@@ -2,7 +2,7 @@
 
 ### Insert语句
 
- ![image-20220226145252205](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220226145252205.png)
+![image-20220728163759508](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207281637561.png)
 
 ```mysql
 INSERT INTO emp (id,`name`,sex)
@@ -15,9 +15,12 @@ INSERT INTO emp (id,`name`,sex)
 
 - 可以插入空值NULL。（前提是该字段允许为空）
 
-- 可以一次性添加多条语句。
+- 可以一次性添加多条语句。如下图：
 
-![image-20220226151829290](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220226151829290.png)
+```mysql
+INSERT INTO `goods` (id, goods_name, price)
+	VALUES(50, '三星手机', 2300),(60, '海尔手机', 1800);
+```
 
 - 如果是给表中**所有字段添加数据**，**可以不写**前面的**字段名称**。
 - 默认值使用：当不给某个字段值时，如果有默认值回自动添加。
@@ -26,11 +29,11 @@ INSERT INTO emp (id,`name`,sex)
 
 ### Update语句
 
-![image-20220226152645188](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220226152645188.png)
+![image-20220728163926315](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207281639376.png)
 
 set：修改哪些列 和 赋予哪些值
 
-where：指定应更新哪些行。没有where字句，则更新所有行。
+where：指定应更新哪些记录(行)。没有where字句，则更新所有记录(行)。
 
 expr是表达式。
 
@@ -54,7 +57,7 @@ UPDATE emp
 
 ### Delete语句
 
-![image-20220226154246134](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220226154246134.png)
+![image-20220728164032371](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207281640423.png)
 
 ```mysql
 DELETE FROM emp 
@@ -74,21 +77,21 @@ DELETE FROM emp
 
 ##### 1.普通查询
 
-![image-20220226161619758](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220226161619758.png)
+![image-20220728164124474](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207281641533.png)
 
 distinct 独特的。
 
-![image-20220226162338059](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220226162338059.png)
+<img src="https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207281642889.png" alt="image-20220728164213841" style="zoom: 80%;" />
 
 
 
 ##### 2.运算查询
 
-![image-20220226162432780](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220226162432780.png)
+![image-20220728164356022](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207281643087.png)
 
 可以是列名column，亦可以是表达式。
 
-![image-20220226162635547](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220226162635547.png)
+<img src="https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207281644461.png" alt="image-20220728164411407" style="zoom:80%;" />
 
 AS 后面的字符串（含中文）可以不加单引号。
 
@@ -97,33 +100,68 @@ AS 后面的字符串（含中文）可以不加单引号。
 
 如： select * from emp (as) worker; 设置emp表别名为worker。
 
+例子：
+
+```mysql
+-- 统计每个学生的总分
+SELECT `name`, (chinese+english+math) FROM student; 
+-- 在所有学生总分加 10 分的情况
+SELECT `name`, (chinese + english + math + 10) FROM student; 
+-- 使用别名表示学生分数。
+SELECT `name` AS '名字', (chinese + english + math + 10) AS total_score
+	FROM student;
+```
+
 
 
 ##### 3.where常用运算符（过滤搜索）
 
-![image-20220226164132831](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220226164132831.png)
+放在where关键字后：
 
-不等号 和 like 和 逻辑运算符使用：
+![image-20220728165016407](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207281650518.png)
 
-![image-20220226165138071](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220226165138071.png)
+like 使用：
+
+```mysql
+-- 查询所有姓李的学生信息。
+SELECT * FROM student
+	WHERE `name` LIKE '李%
+--%表示一个或多个字符
+```
 
 between and是闭区间：
 
-![image-20220226165425641](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220226165425641.png)
+```mysql
+-- 查询英语分数在 80－90 之间的同学。
+SELECT * FROM student
+	WHERE english BETWEEN 80 AND 90;
+```
 
 in的使用：
 
-![image-20220226165623976](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220226165623976.png)
+```mysql
+-- 查询数学分数为 89,90,91 的同学。
+SELECT * FROM student
+	WHERE math = 89 OR math = 90 OR math = 91;
+SELECT * FROM student
+	WHERE math IN (89, 90, 91);
+```
 
 
 
-##### 4.排序查询结果
+##### 4.排序查询
 
-![image-20220226165923642](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220226165923642.png)
+![image-20220728165252994](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207281652043.png)
 
 asc升序（默认）、desc降序
 
-![image-20220226170110793](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220226170110793.png)
+![image-20220728165308254](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207281653317.png)
+
+```mysql
+-- 对总分按从高到低的顺序输出 [降序] -- 使用别名排序
+SELECT `name` , (chinese + english + math) AS total_score FROM student
+ORDER BY total_score DESC;
+```
 
 
 
@@ -133,7 +171,14 @@ asc升序（默认）、desc降序
 
 ​		注意日期格式即可
 
-![image-20220301191008434](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220301191008434.png)
+```mysql
+-- 如何查找 1992.1.1 后入职的员工
+-- 老师说明： 在 mysql 中,日期类型可以直接比较, 需要注意格式
+SELECT * FROM emp
+	WHERE hiredate > '1992-01-01'
+```
+
+
 
 ##### 2. like操作符（模糊）
 
@@ -141,7 +186,17 @@ asc升序（默认）、desc降序
 
 ​		_表示单个人任意字符
 
-![image-20220301191106511](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220301191106511.png)
+```mysql
+-- ?如何显示首字符为 S 的员工姓名和工资
+SELECT ename, sal FROM emp
+	WHERE ename LIKE 'S%'
+
+-- ?如何显示第三个字符为大写 O 的所有员工的姓名和工资
+SELECT ename, sal FROM emp
+	WHERE ename LIKE '__O%'
+```
+
+
 
 ##### 3. 查询空值，使用 xx is null。
 
@@ -151,37 +206,46 @@ asc升序（默认）、desc降序
 
 ​	后面继续写即可。
 
-![image-20220301192230273](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220301192230273.png)
+```mysql
+-- ?按照部门号升序而雇员的工资降序排列 , 显示雇员信息
+SELECT * FROM emp
+ORDER BY deptno ASC , sal DESC;
+```
 
 ##### 5.  分页查询
 
 需求：查找结果显示时，当数据量非常大，不可能全部显示，需要一页一页显示。
 
-![image-20220301192905064](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220301192905064.png)
+![image-20220728181528989](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207281815096.png)
 
-使用：（显示第x页：前三条记录）
+使用：
 
-![image-20220301193121086](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220301193121086.png)
-
-![image-20220301193224543](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220301193224543.png)
+```mysql
+-- 分页查询
+-- 按雇员的 id 号升序取出， 每页显示 3 条记录，请分别显示 第 1 页，第 2 页，第 3 页
+-- 第 1 页
+SELECT * FROM emp
+	ORDER BY empno
+	LIMIT 0, 3; 
+-- 第 2 页
+SELECT * FROM emp
+	ORDER BY empno
+	LIMIT 3, 3; 
+-- 第 3 页
+SELECT * FROM emp
+	ORDER BY empno
+	LIMIT 6, 3;
+```
 
 ##### 6. 分组加强
 
-![image-20220301195213043](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220301195213043.png)
-
-![image-20220301195237264](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220301195237264.png)
-
-![image-20220301195305835](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220301195305835.png)
-
-##### 总结
-
 语法顺序
 
- ![image-20220301195402863](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220301195402863.png)
+ ![image-20220728181733713](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202207281817813.png)
 
 案例：
 
-![image-20220301200214619](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220301200214619.png)
+略。
 
 
 
@@ -235,11 +299,19 @@ SELECT ename,salary,grade
 
 思考题目： 显示员工名称和他上级名称
 
-![image-20220303193952216](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220303193952216.png)
+```mysql
+-- 老韩分析： 员工名字 在 emp, 上级的名字的名字 emp
+-- 员工和上级是通过 emp 表的 mgr 列关联
+-- 这里老师小结：
+-- 自连接的特点 1. 把同一张表当做两张表使用
+-- 2. 需要给表取别名 表名 表别名
+-- 3. 列名不明确，可以指定列的别名 列名 as 列的别名
+SELECT worker.ename AS '职员名' , boss.ename AS '上级名' FROM emp worker, emp boss
+WHERE worker.mgr = boss.empno;
+SELECT * FROM emp;
+```
 
 即：mgr上级编号也在这张表中。
-
-![image-20220303194123844](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220303194123844.png)
 
 
 
@@ -285,10 +357,6 @@ SELECT * FROM (
 	AND emp.salary = temp.Max_salary 
 #temp是临时表名字。给出两个where条件即可确定员工
 ```
-
-![image-20220303201546977](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20220303201546977.png)
-
-上述题目子查询得到的结果。
 
 
 

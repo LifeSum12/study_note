@@ -57,17 +57,17 @@ interface Cal{
 
 ### 函数式接口
 
-无需再自己编写接口。
+只包含一个抽象方法的接口，称为**函数式接口**。
+
+你可以通过 Lambda 表达式来创建该接口的对象实例。
 
 #### 内置的四大核心
 
-![image-20211220193848089](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20211220193848089.png)
-
- 
+<img src="https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202209071423416.png" alt="image-20220907142331833" style="zoom:80%;" />
 
 #### 其他接口（子接口）
 
-<img src="C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20211220195143954.png" alt="image-20211220195143954" style="zoom:80%;" />
+<img src="https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202209071423576.png" alt="image-20220907142359483" style="zoom: 67%;" />
 
 
 ### 引用
@@ -78,7 +78,7 @@ interface Cal{
 
 ##### 语法格式
 
-![image-20211220201316860](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20211220201316860.png)
+<img src="https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202209071426053.png" alt="image-20220907142617994" style="zoom: 80%;" />
 
 - 要求1：引用的方法的 **参数和返回值** 要和函数式接口中的抽象方法 一致。因此，可以省略参数书写。系统会一一对应。
 
@@ -94,11 +94,9 @@ interface Cal{
 
 传统的Lambda表达式：
 
-![image-20211220200901067](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20211220200901067.png)
-
 采用方法引用后：
 
-![image-20211220200711653](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20211220200711653.png)
+<img src="https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202209071426271.png" alt="image-20220907142656219" style="zoom:80%;" />
 
 Consumer中的抽象方法 accept 和 PrintSream类的 println方法 **参数和返回值一致**。
 
