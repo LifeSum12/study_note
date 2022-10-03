@@ -148,7 +148,7 @@ git status																											状态查看，红色表示未加入缓冲�
 
 ② git commit -m "版本信息"
 
-git remote -v 																										查看版本信息
+git remote -v 																										查看所有远程地址别名
 
 git remote add study_note https://github.com/LifeSum12/study_note	添加GitHub路径
 
