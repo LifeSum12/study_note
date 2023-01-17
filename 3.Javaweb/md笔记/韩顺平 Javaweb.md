@@ -10,7 +10,9 @@
 
 
 
- js代码写在script标签中，scrpt 标签的位置，可以在 head 中，也可以在 body 体。
+ js代码写在script标签中。
+
+ scrpt 标签的位置，可以在 head 中，也可以在 body 体。
 
 ```html
 <!DOCTYPE html> <html lang="en"> 
@@ -30,6 +32,272 @@
 ```
 
 -  type="text/javascript" 表示这个脚本(script)类型是javascript，可以不写，但是建议写上。
+
+### 快速入门
+
+使用的两种方式：（两种方式，是二选一，不能混用）
+
+1. <script\> 标签里写js代码
+2. 使用 <script\> 标签引入 JS 文件
+
+```html
+<!DOCTYPE html> <html lang="en"> 
+    <head> 
+        <meta charset="UTF-8"> 
+        <title>标题</title>
+        <!-- src="引入的 js 文件"> -->
+        <script type="text/javascript" src="a.js"> </script> 
+    </head> 
+    <body> 
+    </body> 
+</html>
+```
+
+### 变量
+
+**基本数据定义：**
+
+```html
+<!DOCTYPE html> <html lang="en"> 
+    <head> 
+        <meta charset="UTF-8"> 
+        <title>标题</title>
+    </head> 
+    <body> 
+        <script type="text/javascript"> 
+            var num = 100; 
+            var name = "韩顺平";
+            alert("num=" + num); 
+            //数组定义方式1：
+            var cars1 = ["Audi", "BMW", "Volvo"];
+        </script>
+    </body> 
+</html>
+```
+
+**数组定义：**（两种方法，new和 [ ]）
+
+```html
+<script type="text/javascript"> 
+//数组定义方式 1 
+    var cars1 = ["Audi", "BMW", "Volvo"]; 
+    console.log("cars1=" + cars1); 
+    console.log(cars1[1]);//表示访问 cars1 数组的第 2 个元素, 1 表示下标/索引， 从 0 开始编号
+//数组定义方式 2 
+    var cars2 = [];//空数组 
+    //添加元素 
+    cars2[0] = "奥迪"; 
+    cars2[1] = "宝马"; 
+    cars2[2] = "奔驰";
+    console.log("cars2=" + cars2); 
+    console.log("cars2[2]=" + cars2[2]);//奔驰 
+    console.log("cars2[10]=" + cars2[10]);// 如 果 该 元 素 不 存 在 ， 返 回 的 就 是 undefined
+//数组定义方式 3 
+    var cars3 = new Array("Audi", "BMW", "Volvo"); 
+    console.log("cars3=" + cars3); 
+    console.log("cars3[0]=" + cars3[0]);//Audi 
+//数组定义方式 4 
+    var cars4 = new Array();//空数组 
+    console.log(typeof cars4); 
+    cars4[0] = "法拉利"; 
+    cars4[1] = "保时捷"; 
+    cars4[2] = "yy";//相当于是给数组扩容 
+    cars4[0] = "zz";//替换 
+    cars4[8] = "红旗";//扩容, 如果是跳过了下标给赋值，那么中间没有赋值的元素 为 undefined 
+    console.log("cars4[3]=" + cars4[3]);//undefined 
+    console.log("cars4= " + cars4);
+    
+</script>
+```
+
+**对象的定义：**
+
+```java
+//第一种方式：
+    var obj = new Object(); // 对象实例（空对象）
+    obj.属性名 = 值; // 定义一个属性 
+    obj.函数名 = function(){} // 定义一个函数
+    //对象访问 
+    obj.属性 
+    obj.函数名();
+//第二种方式：
+	var obj = { 
+        属性名：值, // 定义属性 
+        属性名：值, // 定义属性 , 注意有,号 
+        函数名：function(){} // 定义函数 
+    };
+	//对象访问 
+	obj.属性 
+    obj.函数名();
+```
+
+
+
+
+
+数据类型：
+
+```java
+数值类型:	number 
+字符串类型： string (可以双引号括起来，也可以单引号括起来)
+对象类型: object 
+布尔类型： boolean 
+函数类型： function
+```
+
+特殊值：
+
+```java
+undefined 	变量未赋初始值时，默认undefined 
+null 		空值 
+NaN 		Not a Number 非数值
+```
+
+
+
+
+
+### 运算符
+
+**算术运算符**
+
+![image-20221008145708663](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202210081457747.png)
+
+
+
+**赋值运算符**
+
+![image-20221008145726752](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202210081457812.png)
+
+**关系运算符**
+
+![image-20221008145744962](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202210081457034.png)
+
+**逻辑运算符**
+
+![image-20221008145848864](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202210081458921.png)
+
+- 在 JavaScript 语言中，所有的变量，都可以做为一个 boolean 类型的变量去使用。
+- 0 、null、 undefined、"" (空串) 都认为是 false
+
+**条件符运算** 
+
+类似 Java 的三元运算符。
+
+### 函数
+
+变量定义方法：
+
+```html
+<!DOCTYPE html> <html lang="en"> 
+    <head> 
+        <meta charset="UTF-8"> 
+        <title>标题</title>
+         <script type="text/javascript"> 
+		//定义一个简单的函数 
+        //在 js 中如果要执行函数，有两种方式：1.主动调用 hi(); 2. 通过事件去触发该函数            
+            //第一种：
+            function hi() { 
+                alert("hi 老韩~"); 
+            }
+            //第二种：
+            var f1 = function () { 
+                alert("hi 老韩"); 
+            }
+        </script>
+    </head> 
+    <body> 
+      <!-- 这里表示给 button 绑定了 onclick 事件 当用户点击了该 button，就会触发 hi() 函数 -->
+        <button onclick="hi()">点击这里</button>
+    </body> 
+</html>
+```
+
+两种定义方式：
+
+![image-20221008151016241](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202210081510305.png)
+
+![image-20221008151141440](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202210081511510.png)
+
+- JS 中函数的重载会覆盖掉上一次的定义 
+
+- 函数的 arguments 隐形参数（作用域在 function 函数内） 
+  - 隐形参数: 在 function 函数中不需要定义，可以直接用来获取所有参数的变量。是一个obeject类型的数组。
+  - 隐形参数特别像 java 的可变参数一样。 public void fun( int ... args )
+  - 只有当实参个数大于形参个数时，arguments隐形参数才会接收到实参值。
+
+
+
+### 事件
+
+**事件是电脑输入设备与页面进行交互的响应**。**事件通常与函数配合使用，这样就可以通过发生的事件来驱动函数执行。**
+
+**事件一览表：**
+
+![image-20221008153227100](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202210081532234.png)
+
+**事件注册：**
+
+1. 事件的注册（绑定） 
+
+   事件注册(绑定)：当事件响应(触发)后要浏览器执行哪些操作代码，叫事件注册或事件绑定 。
+
+2. 静态注册事件 
+
+   通过 html 标签的事件属性直接赋于事件响应后的代码，这种方式叫静态注册 。
+
+3. 动态注册事件
+
+   通过 js 代码得到标签的 dom 对象，然后再通过 dom 对象.事件名 = function(){} 这种形 式叫动态注册。
+
+**onclick事件演示：**
+
+```html
+<!DOCTYPE html> <html lang="en"> 
+    <head> 
+        <meta charset="UTF-8"> 
+        <title>标题</title>
+        <script type="text/javascript"> 
+            function sayOK() { 
+                alert("你点击了 sayOK 按钮"); 
+            }
+            
+            //window.onload指当页面加载完毕后，我们再进行动态绑定.
+            window.onload = function () {
+              //动态注册 onclick 事件
+				//1. 先拿到 id=btn01 的 button 对应 dom 对象
+                //2. 通过 dom对象 动态的绑定 onclick 事件 
+                //3. 通过 document 的 getElementById 获取对应的 dom 对象 
+                var btn01 = document.getElementById("btn01"); 
+                btn01.onclick = function () { 
+                    alert("你点击了 sayHi 按钮"); 
+                } 
+            }
+        </script> 
+    </head> 
+    <body> 
+        <!--静态注册 onClick 事件--> 
+        <button onclick="sayOK()">sayOK 按钮</button> 
+        <button id="btn01">sayHi 按钮</button>
+    </body> 
+</html>
+```
+
+
+
+### 浏览器对象
+
+**JavaScript可以获取浏览器提供的很多对象，并进行操作。**
+
+window
+
+navigator：浏览器的信息，最常用的属性包括
+
+screen
+
+location：当前页面的URL信息
+
+document：表示当前页面，`document`对象就是整个DOM树的根节点。
 
 
 
@@ -552,7 +820,7 @@ public class MyFilter implements Filter {
 
 
 
-## JQuery
+## JQuery（Js的开发利器）
 
 对原生JavaScript代码的封装，提供了很多事件、API、选择器供使用，使用户能更方便地处理 HTML,css,dom。流行技术。
 
@@ -659,7 +927,7 @@ Ajax 是一种浏览器**①异步发起请求(指定发哪些数据)**，**② 
 
 ### 使用
 
-javaScript原生的Ajax的请求。
+**javaScript原生的Ajax的请求。**
 
 Ajax无非是对XMLHttpRequest 对象（XHR）的操作，即创建xhr，xhr发送请求，xhr响应请求。
 
@@ -733,7 +1001,8 @@ function loadXMLDoc()
                             console.log("成功");                         
                         },
                         dataType: "json"
-            })        
+            }
+         )        
     </script>
 </head>
 <body>
@@ -742,6 +1011,23 @@ function loadXMLDoc()
 ```
 
 ![image-20220930210447742](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202209302104827.png)
+
+
+
+### 发展历史
+
+**同步请求：**用户必须等待操作结束才能继续和网页进行交互。
+
+**传统的Ajax：**远古时期，XMLHttpRequest对象的出现，JavaScript调用它就可以让浏览器异步地发http请求，然后这项异步技术就被称Ajax。
+
+**JQuery封装：**之后jQuery封装了它，让异步结果更清晰的表现在一个对象的回调函数属性上。编写方式更简单，但出现了新的问题~回调地狱。
+**ES6新规定：**Promise为了解决异步编程的回调地狱问题诞生了。主要让代码变简洁。
+
+**Axios库：**随后有人把xhr对象用Promise封装了起来~它就是axios库(浏览器端)，axios在node.js环境是http模块的封装.
+后来又出现了一个可以异步地发http请求的api，就是fetch()。它并非是封装xhr对象的库。而是全新的JavaScript的接口。而且fetch api天生就是自带Promise的
+现在的Ajax就有了两种方式: xhr对象和fetch()
+
+
 
 
 
@@ -780,9 +1066,139 @@ function loadXMLDoc()
 
 <img src="https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202209272118339.png" alt="image-20220927211843252" style="zoom:80%;" />
 
-- **ES6**（javaScript新版本）
-- JQuery（javaScript工具库）
-- **Vue**（类似JavaScript的框架）
-- React（微服务架构的技术）
+- JQuery（javaScript工具库，JQuery替代了js+dom编程）
+- **ES6**（javaScript=ES5，js新版本）
+- **Vue/React**（JavaScript的框架）
 
 Axios+vue实现Ajax技术（改进异步请求Ajax）
+
+
+
+## js事件处理的发展
+
+Js+Dom
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>onclick 单击事件</title>
+<script type="text/javascript">
+    function sayOK() {
+        alert("你点击了 sayOK 按钮");
+    }
+    
+    //当页面加载完毕后，我们再进行动态绑定
+    window.onload = function () {
+    	// 动态注册 onclick 事件
+    	//1. 先拿到 id=btn01 的 button 对应 dom 对象
+    	//2. 通过 dom 对象动态的绑定 onclick 事件
+    	//3. 通过 document 的 getElementById 获取对应的 dom 对象
+    	var btn01 = document.getElementById("btn01");
+        btn01.onclick = function () {
+        	alert("你点击了 sayHi 按钮");
+        }
+    }
+</script>
+</head>
+<body>
+    <!--静态注册 onClick 事件：通过 html 标签的事件属性直接赋于事件响应后的代码-->
+    <button onclick="sayOK()">sayOK 按钮</button>
+    <!--动态注册 onClick 事件：得到标签的dom对象，然后再通过dom对象.事件名 = function(){}的形式-->
+    <button id="btn01">sayHi 按钮</button>
+</body>
+</html>
+```
+
+
+
+JQuery
+
+总结：通过$符号，省略了document.getElementById()步骤，简洁代码。
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>jQuery 快速入门</title>
+<!-- 引入 jquery 库-->
+<script type="text/javascript" src="script/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    <!-- $(function () {} 等价 window.onload = function () {} -->
+    $(function (){
+        //1.得到 btn01 这个对象->jquery 对象
+        //2.绑定事件
+        $("#btn01").click(function (){
+            alert("hello,jquery...")
+        })
+    });
+</script>
+</head>
+<body>
+<button id="btn01">按钮</button>
+</body>
+</html>
+```
+
+
+
+Vue
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<title>事件处理</title>
+</head>
+<body>
+    <!--视图-->
+    <div id="app">
+        <h1>{{message}}</h1>
+        <!--老韩解读
+        1. v-on:click 表示我们要给 button 元素绑定一个 click 的事件
+        2. sayHi() 表示绑定的方法, 在方法池 methods{} 定义的
+        3. 底层仍然是 dom 处理
+        4. 如果方法不需要传递参数，可以省略()
+        5. v-on:click 可以简写@, 但是需要浏览器支持
+        -->
+        <button v-on:click="sayHi()">点击输出</button>
+        <button v-on:click="sayOk()">点击输出</button>
+        <button v-on:click="sayHi">点击输出</button>
+        <button @click="sayOk">点击输出</button>
+    </div>
+    <!--引入我们的 vue.js-->
+    <script src="vue.js"></script>
+    <!--创建一个 vue 实例,并挂载到 id=app 的 div-->
+    <script>
+        let vm = new Vue({
+            el: "#app", 
+            data: {
+            	message: "Vue 事件处理的案例", name: "韩顺平教育"
+            },
+            methods: {
+                sayHi() {
+                    console.log("hi, 银角大王~");
+                },
+                sayOk() {
+                    console.log("ok, 金角大王~");
+                }
+            }
+        })
+    </script>
+</body>
+</html>
+```
+
+## ES6(=js6新特性)
+
+## Vue
+
+单项渲染：标签内使用{{message}}。标签属性使用v-bind，简写为：。
+
+双向渲染：v-model
+
+事件绑定：v-on，简写为@
+
