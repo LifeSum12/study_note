@@ -311,7 +311,7 @@ document：表示当前页面，`document`对象就是整个DOM树的根节点�
 
 ## **Tomcat**
 
-是web容器中的一种，也是Java Servlet，jsp等技术的开源实现。
+是web容器中的一种（也可以理解为一种中间件），也是Java Servlet，jsp等技术的开源实现。
 
 作用是：暴露端口，按照特定资源URL找到处理的servlet。然后处理请求。
 

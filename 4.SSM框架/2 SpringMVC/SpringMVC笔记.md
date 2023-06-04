@@ -1376,33 +1376,62 @@ ResponseEntity用于控制器方法的返回值类型，该控制器方法的返
 
 ### 1、文件下载
 
+#### 1) 传统的JavaWeb
+
+可以通过servlet来实现文件下载
+
+```java
+@WebServlet("/download")
+public class FileDownloadServlet extends HttpServlet {
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // 获取要下载的文件名
+        String fileName = request.getParameter("filename");
+        // 获取要下载的文件路径
+        String filePath = getServletContext().getRealPath("/WEB-INF/files/" + fileName);
+        // 设置响应内容类型为二进制流
+        response.setContentType("application/octet-stream");
+        // 设置响应头信息，告诉浏览器以附件形式下载文件
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        // 读取要下载的文件，写入到响应输出流中
+        try (InputStream in = new FileInputStream(filePath);
+             OutputStream out = response.getOutputStream()) {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = in.read(buffer)) != -1) {
+                out.write(buffer, 0, len);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+}
+```
+
+在上述代码中，通过设置响应内容类型为二进制流，以及设置响应头信息，告诉浏览器以附件形式下载文件。然后通过读取要下载的文件，写入到响应输出流中，实现文件下载。
+
+
+
+#### 2) SpringMVC
+
 使用ResponseEntity实现下载文件的功能
 
 ```java
-@RequestMapping("/testDown")
-public ResponseEntity<byte[]> testResponseEntity(HttpSession session) throws IOException {
-    //获取ServletContext对象
-    ServletContext servletContext = session.getServletContext();
-    //获取服务器中文件的真实路径
-    String realPath = servletContext.getRealPath("/static/img/1.jpg");
-    //创建输入流
-    InputStream is = new FileInputStream(realPath);
-    //创建字节数组
-    byte[] bytes = new byte[is.available()];
-    //将流读到字节数组中
-    is.read(bytes);
-    //创建HttpHeaders对象设置响应头信息
-    MultiValueMap<String, String> headers = new HttpHeaders();
-    //设置要下载方式以及下载文件的名字
-    headers.add("Content-Disposition", "attachment;filename=1.jpg");
-    //设置响应状态码
-    HttpStatus statusCode = HttpStatus.OK;
-    //创建ResponseEntity对象
-    ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(bytes, headers, statusCode);
-    //关闭输入流
-    is.close();
-    return responseEntity;
+@RequestMapping(value = "/download", method = RequestMethod.GET)
+public ResponseEntity<byte[]> downloadFile(@RequestParam("filename") String fileName) throws IOException {
+    // 获取要下载的文件路径
+    String filePath = "files/" + fileName;
+    // 读取要下载的文件，返回一个字节数组
+    byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));
+    // 设置响应头信息，告诉浏览器以附件形式下载文件
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+    headers.setContentDispositionFormData("attachment", fileName);
+    // 返回ResponseEntity对象
+    return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
 }
+
 ```
 
 ### 2、文件上传

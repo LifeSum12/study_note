@@ -1,3 +1,200 @@
+![JDK1.8主要新特性](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/javase-37.png)
+
+文档 https://juejin.cn/post/6962035387787116551#heading-0
+
+## Lambda表达式
+
+使用Lambda表达式 依赖于函数接口，下面是函数式接口的要求:
+
+1. 在接口中只能够允许有一个抽象方法
+
+2. 在函数接口中定义object类中方法
+
+3. 使用默认或者静态方法
+
+### 集合遍历
+
+```java
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("no1");
+        strings.add("no2");
+        strings.add("no3");
+        strings.add("no4");
+		//匿名内部类方式
+        strings.forEach(new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                System.out.println(s);
+            }
+        });
+		//Lambda方式
+        strings.forEach((s -> System.out.println(s)));
+```
+
+底层解析：
+
+`forEach` 方法：`action` 是一个函数式接口，用于接收集合中的每个元素并对其执行操作。`Consumer` 接口定义了一个名为 `accept` 的抽象方法，该方法接收一个参数并返回 `void`，正好符合我们的需求。因此，我们可以将 Lambda 表达式作为 `forEach` 方法的参数，用于对集合中的每个元素执行操作。
+
+```java
+void forEach(Consumer<? super T> action)
+```
+
+```java
+@FunctionalInterface
+public interface Consumer<T> {
+    void accept(T t);
+}
+```
+
+具体来看看，forEach方法的步骤：
+
+Collection,Map 接口都有 `forEach` 方法：
+
+（Collection继承于Iterable接口，Map自身就有该方法）
+
+```java
+public void forEach(Consumer<? super E> action) {
+//首先，该方法会对传入的函数式接口进行非空检查。注意：Objects是一个final类工具类且不可继承，与父类object不同。
+    Objects.requireNonNull(action);
+//为了避免在遍历过程中集合被修改，modCount记录了集合被修改的次数。
+//注意：modCount是在AbstractList类中定义的一个变量，用于记录集合被修改的次数。
+    final int expectedModCount = modCount;
+//注意this关键字，指的是调用forEach方法的集合
+    @SuppressWarnings("unchecked")
+    //将集合中的元素保存到 elementData 数组中
+    final E[] elementData = (E[]) this.elementData;
+    //获取集合的大小 size
+    final int size = this.size;	    
+//用 for 循环遍历数组中的元素，并将每个元素传递给 action.accept 方法，即执行 Lambda 表达式中的操作。
+    for (int i = 0; modCount == expectedModCount && i < size; i++) {
+        action.accept(elementData[i]);
+    }
+//如果发现集合在遍历过程中被修改，就抛出 ConcurrentModificationException 异常   
+    if (modCount != expectedModCount) {
+        throw new ConcurrentModificationException();
+    }
+}
+
+```
+
+可以看得出，lambda表达式对Consumer接口实现。参数是该集合的每一个元素，对每一个元素的操作是自定义的。
+
+
+
+### 集合排序
+
+List接口有sort排序方法。
+
+而HashMap是一种无序集合，没有排序方法。
+
+（1.可以将其转换为其他集合类型，例如List，并使用工具类Collections.sort()方法对其进行排序。）
+
+（2.使用TreeMap来存取。TreeMap是一种有序的Map，它会根据键的自然顺序或指定的Comparator对键进行排序。）
+
+（3. Java 8 还可以使用Stream API对Map进行排序。）
+
+```java
+//要实现Comparator接口中的compare方法。compare方法：两个参数，返回值int类型
+//实现compare方法的比较规则
+public class MyComparator implements Comparator<MyObject> {
+    @Override
+    public int compare(MyObject o1, MyObject o2) {
+        // 比较逻辑
+        // 如果 o1 小于 o2，返回负数
+        // 如果 o1 等于 o2，返回 0
+        // 如果 o1 大于 o2，返回正数
+    }
+}
+```
+
+String集合排序：
+
+```java
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("no1");
+        strings.add("no2");
+        strings.add("no3");
+        strings.add("no4");
+//匿名内部类方式
+        strings.sort(new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                return s1.compareTo(s2);
+            }
+        });
+//Lambda方式        
+        strings.sort((s1,s2)-> s1.compareTo(s2));
+```
+
+List.sort()方法底层是调用Array.sort()方法。把Comparator实现类传递给Array.sort()方法。
+
+
+
+## 方法引入
+
+把一个方法当作一个参数传递。
+
+| **类型**     | **语法**             | **对应lambda表达式**               |
+| ------------ | -------------------- | ---------------------------------- |
+| 构造器引用   | Class::new           | (args) -> new 类名(args)           |
+| 静态方法引用 | Class::static_method | (args) -> 类名.static_method(args) |
+| 对象方法引用 | Class::method        | (inst,args) -> 类名.method(args)   |
+| 实例方法引用 | instance::method     | (args) -> instance.method(args)    |
+
+
+
+## Stream流
+
+<img src="https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202303131757558.jpg" alt="img" style="zoom:120%;" />
+
+### Stream将list转换为Set
+
+```java
+ArrayList<UserEntity> userEntities = new ArrayList<>();
+//获取UserEntity类型的流
+Stream<UserEntity> stream = userEntities.stream();
+//转换
+Set<UserEntity> collectSet = stream.collect(Collectors.toSet());
+```
+
+`stream.collect()`方法是Java 8引入的Stream API中的一个终端操作，它的作用是将Stream中的元素收集到一个数据结构中，比如List、Set、Map等。该方法接收一个Collector对象作为参数，Collector对象定义了具体的收集逻辑。
+
+`Collectors.toSet()`是Stream API提供的一个Collector对象，它的作用是将Stream中的元素收集到一个Set中。具体来说，`Collectors.toSet()`方法会创建一个新的HashSet对象，并使用HashSet.add()方法将Stream中的元素逐个添加到该对象中，最终返回这个HashSet对象。
+
+### Stream将list转换为Map
+
+```java
+       // key 为string类型 value UserEntity  集合中的数据：UserEntity , string类型
+        Map<String, UserEntity> collect = stream.collect(Collectors.toMap(new Function<UserEntity, String>() 		{
+            @Override
+            public String apply(UserEntity userEntity) {
+                return userEntity.getUserName();
+            }
+        }, new Function<UserEntity, UserEntity>() {
+            @Override
+            public UserEntity apply(UserEntity userEntity) {
+                return userEntity;
+            }
+        }));
+
+//Lambda写法
+Map<String, UserEntity> collect = stream.collect(Collectors.toMap(userEntity->userEntity.getUserName, userEntity->userEntity))
+```
+
+
+
+## Optional
+
+为了解决 java 中的空指针问题而生！
+
+`Optional<T> 类(java.util.Optional)` 是一个容器类，它可以保存类型 `T` 的值，代表这个值存在。或者仅仅保存 `null`，表示这个值不存在。原来用 `null` 表示一个值不存在，现在 `Optional` 可以更好的表达这个概念。并且可以避免空指针异常。
+
+
+
+
+
+# =========================
+
 # Java 8 新特性
 
 Java 8 (又称为 jdk 1.8) 是由Oracle 公司于 2014 年 3 月 18 日发布 Java 8。
@@ -5,11 +202,17 @@ Java 8 (又称为 jdk 1.8) 是由Oracle 公司于 2014 年 3 月 18 日发布 Ja
 目录：
 
 - **Lambda 表达式** − Lambda 允许把函数作为一个方法的参数。
-- **方法引用** − 方法引用提供了非常有用的语法，可以直接引用已有Java类或对象（实例）的方法或构造器。与lambda联合使用，方法引用可以使语言的构造更紧凑简洁，减少冗余代码。
-- **函数式接口** − 可以使用Lambda表达式来表示该接口的一个实现。
+
+  **方法引用** − 方法引用提供了非常有用的语法，可以直接引用已有Java类或对象（实例）的方法或构造器。与lambda联合使用，方法引用可以使语言的构造更紧凑简洁，减少冗余代码。
+
+  **函数式接口** − 可以使用Lambda表达式来表示该接口的一个实现。
+
 - **默认方法** − 默认方法就是一个在接口里面有了一个实现的方法。
+
 - **Stream API** −新添加的Stream API（java.util.stream） 把真正的函数式编程风格引入到Java中。
+
 - **Date Time API** − 加强对日期与时间的处理。
+
 - **Optional 类** − Optional 类已经成为 Java 8 类库的一部分，用来解决空指针异常。
 
 
