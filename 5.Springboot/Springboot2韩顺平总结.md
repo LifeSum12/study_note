@@ -90,7 +90,7 @@ singletonObjects属性保存所有已经创建的单例bean对象。
 
 #### IOC容器类实现（注解方式）
 
-![image-20230405221833010](C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20230405221833010.png)
+![image-20230405221833010](https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202308152250305.png)
 
 **1.书写ComponentScan注解类**
 
