@@ -2,8 +2,7 @@
 
 ## Tomcat
 
-<img src="C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20230326195425104.png" alt="image-20230326195425104" style="zoom:80%;" />
-
+<img src="https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202308152249143.png" alt="image-20230326195425104" style="zoom:80%;" />
 Tomcat要实现的功能：
 
 **一、初始化servlet实例，存入容器（也称servlet容器）**
@@ -123,9 +122,9 @@ singletonObjects属性保存所有已经创建的单例bean对象。
 
 #### 动态代理
 
-<img src="https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202304061818176.png" alt="image-20230406181810051" style="zoom:67%;" />
+="https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202304061818176.png" alt="image-20230406181810051" style="zoom:67%;" />
 
-<img src="https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202304061818767.png" alt="image-20230406181833676" style="zoom:60%;" /> 
+="https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202304061818767.png" alt="image-20230406181833676" style="zoom:60%;" /> 
 
 ![JDK动态代理之实现与原理(一)【JDK篇】 - 掘金](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/10/17338852f71b27bc~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image)
 
@@ -914,7 +913,7 @@ End
 
 主要功能：在8080监听用户http请求，并按规定响应http请求（返回静态资源 or 调用相关servlet业务）
 
-<img src="C:\Users\10275\AppData\Roaming\Typora\typora-user-images\image-20230326195425104.png" alt="image-20230326195425104" style="zoom:80%;" />
+<img src="https://raw.githubusercontent.com/LifeSum12/typora-image/main/img/202308152259365.png" alt="image-20230326195425104" style="zoom:80%;" />
 
 **【Socket网络编程】**
 
